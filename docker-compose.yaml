@@ -1,0 +1,18 @@
+services:
+  ssl-cert-gen:
+    image: alpine/openssl:latest
+    container_name: ssl-cert-gen
+    restart: "no"
+    environment:
+      HOSTNAME: ${HOSTNAME:-custom-server}
+      TLS_COUNTRY:    ${TLS_COUNTRY:-US}
+      TLS_STATE:      ${TLS_STATE:-New York}
+      TLS_CITY:       ${TLS_CITY:-Albany}
+      TLS_ORG:        ${TLS_ORG:-IT Company}
+      TLS_OU:         ${TLS_OU:-IT}
+      TLS_DAYS:       ${TLS_DAYS:-3650}
+      TLS_EXTRA_SANS: ${TLS_EXTRA_SANS:-}
+    volumes:
+      - ./certs:/certs
+      - ./scripts/generate-certs.sh:/generate-certs.sh:ro
+    entrypoint: ["sh", "/generate-certs.sh"]
